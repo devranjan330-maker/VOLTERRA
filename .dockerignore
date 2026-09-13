@@ -1,0 +1,22 @@
+# Byte-compiled / __pycache__
+__pycache__/
+# Virtual environment
+.venv/
+# Local IDE files
+.idea/
+.vscode/
+# Build artifacts
+build/
+dist/
+*.egg-info/
+# Docker files
+Dockerfile
+# Python caches
+*.pyc
+*.pyo
+*.pyd
+# Test caches
+.pytest_cache/
+# OS files
+.DS_Store
+Thumbs.db

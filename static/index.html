@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLTERRA — Closed-Loop Decision Intelligence Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #111622;
+      --card-bg: rgba(22, 28, 45, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #00f2fe;
+      --accent-blue: #4facfe;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --glass-blur: blur(16px);
+      --radius: 14px;
+      --shadow-glow: 0 0 25px rgba(0, 242, 254, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #172033 0%, #0a0d14 70%);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 28px;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .logo-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #0a0d14;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-emerald);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+    }
+
+    /* Grid Layout */
+    .grid-top {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Form & Telemetry */
+    .telemetry-item {
+      margin-bottom: 16px;
+    }
+
+    .telemetry-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    .telemetry-input-wrap {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      transition: all 0.2s;
+    }
+
+    .telemetry-input-wrap:focus-within {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+    }
+
+    .telemetry-input {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      width: 100%;
+      outline: none;
+    }
+
+    .telemetry-unit {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Pipeline Flow Action */
+    .btn-run {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050b14;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      margin-top: 18px;
+      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+    }
+
+    .btn-run:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 242, 254, 0.45);
+    }
+
+    .btn-run:active {
+      transform: translateY(0);
+    }
+
+    /* Digital Twin Simulation & Pipeline Visualizer */
+    .pipeline-bar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .pipeline-step {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .pipeline-step.active {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 242, 254, 0.08);
+    }
+
+    .pipeline-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent-cyan);
+      margin-bottom: 2px;
+    }
+
+    .pipeline-step-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    /* Prediction Risk Banner */
+    .risk-banner {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid transparent;
+    }
+
+    .risk-banner.critical {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(244, 63, 94, 0.3);
+      color: var(--accent-rose);
+    }
+
+    .risk-banner.at_risk {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: var(--accent-amber);
+    }
+
+    .risk-banner.normal {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+    }
+
+    .risk-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .risk-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    /* Candidates Matrix */
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .candidate-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .candidate-card.selected {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+      background: rgba(0, 242, 254, 0.05);
+    }
+
+    .candidate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .candidate-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .candidate-card.selected .candidate-badge {
+      background: var(--accent-cyan);
+      color: #0a0d14;
+    }
+
+    .winner-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-cyan);
+      color: #0a0d14;
+    }
+
+    .candidate-label {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .candidate-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      min-height: 36px;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .metric-row:last-child {
+      border-bottom: none;
+    }
+
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+
+    /* Explanation & Closed-Loop Metrics */
+    .grid-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .rationale-box {
+      background: rgba(0, 242, 254, 0.05);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .measure-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .measure-stat {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 14px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--card-border);
+    }
+
+    .measure-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .measure-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* History Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 14px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      font-weight: 600;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-pill.critical { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); }
+    .badge-pill.at_risk { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+    .badge-pill.normal { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-badge">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div>
+          <h1>VOLTERRA</h1>
+          <div class="tagline">CLOSED-LOOP DECISION INTELLIGENCE ENGINE &bull; PREDICT &rarr; SIMULATE &rarr; OPTIMIZE &rarr; MEASURE</div>
+        </div>
+      </div>
+      <div class="status-chip">
+        <div class="pulse-dot"></div>
+        <span>ENGINE OPERATIONAL</span>
+      </div>
+    </header>
+
+    <div class="grid-top">
+      <!-- Input Telemetry Panel (Observe) -->
+      <div class="card">
+        <div class="card-title">
+          <span>System Telemetry</span>
+          <span style="font-size: 11px; color: var(--accent-cyan);">Observe Layer</span>
+        </div>
+        
+        <div class="telemetry-item">
+          <div class="telemetry-label">
+            <span>Energy Demand</span>
+            <span class="telemetry-unit">kW</span>
+          </div>
+          <div class="telemetry-input-wrap">
+            <input type="number" step="0.1" id="input_demand" class="telemetry-input" value="7.2">
+          </div>
+        </div>
+
+        <div class="telemetry-item">
+          <div class="telemetry-label">
+            <span>Solar Generation</span>
+            <span class="telemetry-unit">kW</span>
+          </div>
+          <div class="telemetry-input-wrap">
+            <input type="number" step="0.1" id="input_solar" class="telemetry-input" value="5.1">
+          </div>
+        </div>
+
+        <div class="telemetry-item">
+          <div class="telemetry-label">
+            <span>Battery State of Charge</span>
+            <span class="telemetry-unit">%</span>
+          </div>
+          <div class="telemetry-input-wrap">
+            <input type="number" step="1" id="input_battery" class="telemetry-input" value="62">
+          </div>
+        </div>
+
+        <div class="telemetry-item">
+          <div class="telemetry-label">
+            <span>Ambient Temperature</span>
+            <span class="telemetry-unit">&deg;C</span>
+          </div>
+          <div class="telemetry-input-wrap">
+            <input type="number" step="0.5" id="input_temp" class="telemetry-input" value="29.5">
+          </div>
+        </div>
+
+        <div class="telemetry-item">
+          <div class="telemetry-label">
+            <span>Occupancy Level</span>
+            <span class="telemetry-unit">level</span>
+          </div>
+          <div class="telemetry-input-wrap">
+            <input type="text" id="input_occupancy" class="telemetry-input" value="medium">
+          </div>
+        </div>
+
+        <div class="telemetry-item">
+          <div class="telemetry-label">
+            <span>Forecast Horizon</span>
+            <span class="telemetry-unit">minutes</span>
+          </div>
+          <div class="telemetry-input-wrap">
+            <input type="number" step="5" id="input_horizon" class="telemetry-input" value="30">
+          </div>
+        </div>
+
+        <button class="btn-run" id="btn_run_pipeline" onclick="runDecidePipeline()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Run Closed-Loop Pipeline
+        </button>
+      </div>
+
+      <!-- Main Decision Studio -->
+      <div class="card">
+        <div class="card-title">
+          <span>Closed-Loop Pipeline Lifecycle</span>
+          <span id="pipeline_status_text" style="font-size: 12px; color: var(--accent-cyan);">Ready</span>
+        </div>
+
+        <!-- Pipeline stages visualizer -->
+        <div class="pipeline-bar">
+          <div class="pipeline-step active" id="step_1">
+            <div class="pipeline-step-num">01</div>
+            <div class="pipeline-step-name">Observe</div>
+          </div>
+          <div class="pipeline-step active" id="step_2">
+            <div class="pipeline-step-num">02</div>
+            <div class="pipeline-step-name">Predict</div>
+          </div>
+          <div class="pipeline-step active" id="step_3">
+            <div class="pipeline-step-num">03</div>
+            <div class="pipeline-step-name">Generate</div>
+          </div>
+          <div class="pipeline-step active" id="step_4">
+            <div class="pipeline-step-num">04</div>
+            <div class="pipeline-step-name">Simulate</div>
+          </div>
+          <div class="pipeline-step active" id="step_5">
+            <div class="pipeline-step-num">05</div>
+            <div class="pipeline-step-name">Optimize</div>
+          </div>
+          <div class="pipeline-step active" id="step_6">
+            <div class="pipeline-step-num">06</div>
+            <div class="pipeline-step-name">Explain</div>
+          </div>
+        </div>
+
+        <!-- Risk Prediction Banner -->
+        <div class="risk-banner critical" id="risk_banner">
+          <div>
+            <div class="risk-title" id="risk_label">CRITICAL OVERLOAD RISK PREDICTED</div>
+            <div class="risk-desc" id="risk_notes">Predicted demand (9.3 kW) exceeds available supply (8.1 kW) at T+30m.</div>
+          </div>
+          <div style="font-family: 'JetBrains Mono'; font-weight: 700; font-size: 20px;" id="risk_margin">-1.2 kW</div>
+        </div>
+
+        <!-- Decision Space Candidates Grid -->
+        <div class="card-title" style="margin-top: 10px;">
+          <span>Candidate Decision Space &bull; Digital Twin Simulation</span>
+        </div>
+
+        <div class="candidates-grid" id="candidates_container">
+          <!-- Populated by Javascript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Explanation & Measurement -->
+    <div class="grid-bottom">
+      <div class="card">
+        <div class="card-title">
+          <span>Grounded Explanation</span>
+          <span style="font-size: 11px; color: var(--accent-cyan);">Traceable Rationale</span>
+        </div>
+        <div class="rationale-box" id="explanation_text">
+          Strategy D is preferred because it reduces the predicted peak while maintaining the required battery reserve.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Closed-Loop Impact Measurement</span>
+          <span style="font-size: 11px; color: var(--accent-emerald);">Verified Outcome</span>
+        </div>
+        <div class="measure-box">
+          <div class="measure-stat">
+            <div class="measure-val" id="val_before_peak">9.4 kW</div>
+            <div class="measure-label">Before Peak</div>
+          </div>
+          <div class="measure-stat">
+            <div class="measure-val" id="val_after_peak">7.9 kW</div>
+            <div class="measure-label">After Peak</div>
+          </div>
+          <div class="measure-stat">
+            <div class="measure-val" style="color: var(--accent-emerald);" id="val_improvement">+15.9%</div>
+            <div class="measure-label">Peak Reduction</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit History Log -->
+    <div class="card">
+      <div class="card-title">
+        <span>Decision History &amp; Continuous Learning Log</span>
+        <button onclick="loadHistory()" style="background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); padding: 4px 10px; border-radius: 6px; cursor: pointer;">Refresh</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Input Demand</th>
+            <th>Solar Supply</th>
+            <th>Battery SOC</th>
+            <th>Risk Level</th>
+            <th>Selected Decision</th>
+            <th>Outcome Impact</th>
+          </tr>
+        </thead>
+        <tbody id="history_tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/v1';
+
+    async function runDecidePipeline() {
+      const btn = document.getElementById('btn_run_pipeline');
+      btn.innerHTML = 'Processing Closed-Loop...';
+      btn.disabled = true;
+
+      const demand = parseFloat(document.getElementById('input_demand').value) || 7.2;
+      const solar = parseFloat(document.getElementById('input_solar').value) || 5.1;
+      const battery = parseFloat(document.getElementById('input_battery').value) || 62;
+      const temp = parseFloat(document.getElementById('input_temp').value) || 29.5;
+      const occ = document.getElementById('input_occupancy').value || 'medium';
+      const horizon = parseInt(document.getElementById('input_horizon').value) || 30;
+
+      const payload = {
+        system_state: {
+          timestamp: new Date().toISOString(),
+          demand_kw: demand,
+          solar_generation_kw: solar,
+          battery_level_pct: battery,
+          temperature_c: temp,
+          occupancy: occ
+        },
+        horizon_minutes: horizon,
+        objectives: {
+          minimize: ["peak_demand_kw", "cost"],
+          maximize: ["battery_reserve_pct"]
+        },
+        constraints: {
+          min_battery_reserve_pct: 30
+        }
+      };
+
+      try {
+        const resp = await fetch(API_BASE + '/decide', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json();
+          alert("Pipeline Error: " + (err.error ? err.error.message : JSON.stringify(err)));
+          return;
+        }
+
+        const data = await resp.json();
+        renderDecision(data, payload.system_state);
+
+        // Also call execute and measure to demonstrate closed-loop feedback
+        const execResp = await fetch(API_BASE + '/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ selected_candidate_id: data.decision.selected_candidate_id, mode: "virtual" })
+        });
+        const execData = await execResp.json();
+
+        const measResp = await fetch(API_BASE + '/measure', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            before_state: payload.system_state,
+            after_state: execData.resulting_state
+          })
+        });
+        const measData = await measResp.json();
+        renderMeasurement(measData);
+
+        // Refresh History
+        loadHistory();
+      } catch (err) {
+        console.error(err);
+        alert("Failed to communicate with VOLTERRA engine: " + err.message);
+      } finally {
+        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Run Closed-Loop Pipeline';
+        btn.disabled = false;
+      }
+    }
+
+    function renderDecision(data, state) {
+      const risk = data.risk_classification;
+      const banner = document.getElementById('risk_banner');
+      banner.className = 'risk-banner ' + risk;
+      document.getElementById('risk_label').innerText = (risk.toUpperCase() + ' RISK FLAGGED');
+      
+      const winningId = data.decision.selected_candidate_id;
+      const explanation = data.decision.rationale;
+      document.getElementById('explanation_text').innerText = explanation;
+
+      // Render candidates matrix
+      const container = document.getElementById('candidates_container');
+      container.innerHTML = '';
+
+      const outcomesMap = {};
+      data.outcomes.forEach(o => { outcomesMap[o.candidate_id] = o; });
+
+      data.candidates.forEach(cand => {
+        const isWinner = cand.id === winningId;
+        const outcome = outcomesMap[cand.id] || { metrics: {} };
+        const m = outcome.metrics || {};
+
+        const card = document.createElement('div');
+        card.className = 'candidate-card ' + (isWinner ? 'selected' : '');
+        card.innerHTML = `
+          <div class="candidate-header">
+            <div class="candidate-badge">${cand.id}</div>
+            ${isWinner ? '<span class="winner-tag">Optimal</span>' : ''}
+          </div>
+          <div class="candidate-label">${cand.label}</div>
+          <div class="candidate-desc">${cand.description || ''}</div>
+          <div class="metric-row">
+            <span style="color: var(--text-muted)">Peak Demand:</span>
+            <span class="metric-val">${m.peak_demand_kw ?? '--'} kW</span>
+          </div>
+          <div class="metric-row">
+            <span style="color: var(--text-muted)">Projected Cost:</span>
+            <span class="metric-val">$${m.cost ?? '--'}</span>
+          </div>
+          <div class="metric-row">
+            <span style="color: var(--text-muted)">Battery Reserve:</span>
+            <span class="metric-val">${m.battery_reserve_pct ?? '--'}%</span>
+          </div>
+          <div class="metric-row">
+            <span style="color: var(--text-muted)">Renewable Util:</span>
+            <span class="metric-val">${m.renewable_utilization_pct ?? '--'}%</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderMeasurement(meas) {
+      document.getElementById('val_before_peak').innerText = meas.before_peak_kw + ' kW';
+      document.getElementById('val_after_peak').innerText = meas.after_peak_kw + ' kW';
+      document.getElementById('val_improvement').innerText = (meas.improvement_pct > 0 ? '+' : '') + meas.improvement_pct + '%';
+    }
+
+    async function loadHistory() {
+      try {
+        const res = await fetch(API_BASE + '/history?limit=10');
+        const data = await res.json();
+        const tbody = document.getElementById('history_tbody');
+        tbody.innerHTML = '';
+
+        (data.cycles || []).reverse().forEach(c => {
+          const tr = document.createElement('tr');
+          const time = (c.timestamp || '').replace('T', ' ').substring(0, 19);
+          const st = c.system_state || {};
+          const dec = c.decision || {};
+          const out = c.outcome || {};
+
+          tr.innerHTML = `
+            <td>${time}</td>
+            <td>${st.demand_kw ?? '--'} kW</td>
+            <td>${st.solar_generation_kw ?? '--'} kW</td>
+            <td>${st.battery_level_pct ?? '--'}%</td>
+            <td><span class="badge-pill ${c.risk_classification}">${c.risk_classification}</span></td>
+            <td style="color: var(--accent-cyan); font-weight: 700;">${dec.selected_candidate_id ?? '--'}</td>
+            <td>${out.improvement_pct !== undefined ? ('+' + out.improvement_pct + '% reduction') : 'Logged'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error('Failed to load history', e);
+      }
+    }
+
+    // Auto-run initial demo
+    window.addEventListener('DOMContentLoaded', () => {
+      runDecidePipeline();
+    });
+  </script>
+</body>
+</html>

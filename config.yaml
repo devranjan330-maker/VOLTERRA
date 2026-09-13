@@ -1,0 +1,14 @@
+default_risk_thresholds:
+  at_risk_gap_percent: 10
+  critical_gap_percent: 20
+objective_weights:
+  peak_demand: -1.0
+  cost: -0.5
+  renewable_utilization: 0.8
+  battery_health: 0.3
+hard_constraints:
+  min_battery_reserve_percent: 20
+battery_parameters:
+  max_charge_kw: 5.0
+  max_discharge_kw: 5.0
+  efficiency: 0.95

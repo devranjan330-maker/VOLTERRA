@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volterra"
+version = "0.1.0"
+description = "Production‑ready simulation engine"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Your Name", email = "you@example.com"}]
+license = {text = "MIT"}
+keywords = ["simulation", "digital twin", "fastapi"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "loguru",
+    "prometheus-client",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "black",
+    "mypy",
+    "pip-audit",
+    "detect-secrets",
+    "bump2version",
+]

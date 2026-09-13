@@ -1,0 +1,9 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.6
+pydantic>=2.8.2
+pyyaml>=6.0.2
+pytest>=8.3.2
+httpx>=0.28.0
+prometheus-client
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
